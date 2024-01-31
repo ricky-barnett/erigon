@@ -23,6 +23,8 @@ services:
             --ws
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
+            --authrpc.port="8551"
+            --authrpc.vhosts="erigon"
     lighthouse:
         restart: unless-stopped
         image: sigp/lighthouse
