@@ -41,7 +41,7 @@ services:
             lighthouse bn
             --network mainnet
             --http --http-address 0.0.0.0
-            --execution-endpoint http://erigon:8551
+            --execution-endpoint http://172.18.0.2:8551
             --metrics --metrics-address 0.0.0.0
             --execution-jwt /root/jwt.hex
             --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
