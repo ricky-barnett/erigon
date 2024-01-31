@@ -17,31 +17,31 @@ services:
         volumes:
             - /internal/eth:/root
         command: |
-            --internalcl
             --datadir="/root"
             --chain="mainnet"
             --http -http.addr=0.0.0.0 --http.port=8545 --http.corsdomain="*" --http.vhosts="*" --http.api="eth,debug,net,trace,web3,erigon,txpool"
             --ws
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
-    # lighthouse:
-    #     restart: unless-stopped
-    #     image: sigp/lighthouse
-    #     depends_on:
-    #         - erigon
-    #     ports:
-    #         - "5052:5052/tcp" # rpc
-    #         - "5053:5053/tcp"
-    #         - "5054:5054/tcp" # metrics
-    #         - "9000:9000/tcp" # p2p
-    #         - "9000:9000/udp" # p2p
-    #     volumes:
-    #         - /internal/eth:/root
-    #     command: >
-    #         lighthouse bn
-    #         --network mainnet
-    #         --http --http-address 0.0.0.0
-    #         --execution-endpoint http://erigon:8551
-    #         --metrics --metrics-address 0.0.0.0
-    #         --execution-jwt /root/jwt.hex
-    #         --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
+            --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex" --authrpc.addr="0.0.0.0"
+    lighthouse:
+        restart: unless-stopped
+        image: sigp/lighthouse
+        depends_on:
+            - erigon
+        ports:
+            - "5052:5052/tcp" # rpc
+            - "5053:5053/tcp"
+            - "5054:5054/tcp" # metrics
+            - "9000:9000/tcp" # p2p
+            - "9000:9000/udp" # p2p
+        volumes:
+            - /internal/eth:/root
+        command: >
+            lighthouse bn
+            --network mainnet
+            --http --http-address 0.0.0.0
+            --execution-endpoint http://erigon:8551
+            --metrics --metrics-address 0.0.0.0
+            --execution-jwt /root/jwt.hex
+            --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
