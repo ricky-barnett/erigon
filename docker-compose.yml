@@ -16,7 +16,7 @@ services:
             - "4001:4001"
         volumes:
             - /internal/eth:/root
-        command: >
+        command: |
             --datadir="/root"
             --chain="mainnet"
             --http -http.addr=0.0.0.0 --http.port=8545 --http.corsdomain="*" --http.vhosts="*" --http.api="eth,debug,net,trace,web3,erigon,txpool"
