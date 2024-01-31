@@ -16,7 +16,6 @@ services:
             - "4001:4001"
         volumes:
             - /internal/eth:/root
-            - ./jwttoken:/root/jwt:ro
         command: >
             --datadir="/root"
             --chain="mainnet"
@@ -24,7 +23,7 @@ services:
             --ws
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
-            --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt/jwt.hex" --authrpc.addr 0.0.0.0
+            --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex" --authrpc.addr 0.0.0.0
     lighthouse:
         restart: unless-stopped
         image: sigp/lighthouse
@@ -37,13 +36,12 @@ services:
             - "9000:9000/tcp" # p2p
             - "9000:9000/udp" # p2p
         volumes:
-            - /internal/lighthouse:/root
-            - ./jwttoken:/root/jwt:ro
+            - /internal/eth:/root
         command: >
             lighthouse bn
             --network mainnet
             --http --http-address 0.0.0.0
             --execution-endpoint http://erigon:8551
             --metrics --metrics-address 0.0.0.0
-            --execution-jwt /root/jwt/jwt.hex
+            --execution-jwt /root/jwt.hex
             --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
