@@ -23,7 +23,7 @@ services:
             --ws
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
-            --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex"
+            --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex" --authrpc.addr=172.18.0.2 --authrpc.vhosts="reth"
     lighthouse:
         restart: unless-stopped
         image: sigp/lighthouse
@@ -41,7 +41,7 @@ services:
             lighthouse bn
             --network mainnet
             --http --http-address 0.0.0.0
-            --execution-endpoint http://172.18.0.2:8551
+            --execution-endpoint http://erigon:8551
             --metrics --metrics-address 0.0.0.0
             --execution-jwt /root/jwt.hex
             --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
