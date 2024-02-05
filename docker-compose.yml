@@ -15,7 +15,8 @@ services:
             - "4000:4000"
             - "4001:4001"
         volumes:
-            - /internal/eth:/root
+            - ~/erigondata:/root
+            - ./jwttoken:/root/jwt:ro
         command: |
             --datadir="/root"
             --chain="mainnet"
@@ -36,7 +37,8 @@ services:
             - "9000:9000/tcp" # p2p
             - "9000:9000/udp" # p2p
         volumes:
-            - /internal/eth:/root
+            - ~/lighthousedata:/root/.lighthouse
+            - ./jwttoken:/root/jwt:ro
         command: >
             lighthouse bn
             --network mainnet
@@ -45,3 +47,9 @@ services:
             --metrics --metrics-address 0.0.0.0
             --execution-jwt /root/jwt.hex
             --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
+
+volumes:
+    erigondata:
+        driver: local
+    lighthousedata:
+        driver: local
