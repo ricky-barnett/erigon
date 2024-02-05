@@ -70,7 +70,7 @@ services:
             --authrpc.vhosts="*"
             --authrpc.jwtsecret="/root/jwt.hex"
             --rollup.sequencerhttp="https://sequencer.base.org"
-            --chain=base
+            --chain=base-mainnet
             --nodiscover
         depends_on:
             - erigon
