@@ -19,7 +19,7 @@ services:
             --datadir="/root"
             --chain="mainnet"
             --http -http.addr=0.0.0.0 --http.port=8545 --http.corsdomain="*" --http.vhosts="*" --http.api="eth,debug,net,trace,web3,erigon,txpool"
-            --ws --ws.port=8546
+            --ws
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
             --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex" --authrpc.addr="0.0.0.0" --authrpc.vhosts="*"
