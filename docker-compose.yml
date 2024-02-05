@@ -20,7 +20,7 @@ services:
             --datadir="/root"
             --chain="mainnet"
             --http -http.addr=0.0.0.0 --http.port=8545 --http.corsdomain="*" --http.vhosts="*" --http.api="eth,debug,net,trace,web3,erigon,txpool"
-            --ws
+            --ws --ws.port=8546
             --torrent.download.rate="2048mb"
             --nat="extip:167.235.183.33"
             --authrpc.port="8551" --authrpc.jwtsecret="/root/jwt.hex" --authrpc.addr="0.0.0.0" --authrpc.vhosts="*"
@@ -45,3 +45,54 @@ services:
             --metrics --metrics-address 0.0.0.0
             --execution-jwt /root/jwt.hex
             --checkpoint-sync-url https://mainnet.checkpoint.sigp.io
+    op-erigon:
+        restart: unless-stopped
+        image: testinprod/op-erigon
+        ports:
+            - "9002:9002" # metrics
+            - "30304:30304" # eth/66 peering
+            - "7545:7545" # rpc
+            - "7546:7546" # ws
+            - "9551:9551" # engine
+            - "9090:9090" # private api
+        volumes:
+            - /internal/eth:/root
+        command: >
+            --datadir=/root
+            --private.api.addr=localhost:9090
+            --http.addr=0.0.0.0
+            --http.port=7545
+            --http.corsdomain="*"
+            --http.vhosts="*"
+            --ws
+            --ws.port=7546
+            --authrpc.addr=0.0.0.0
+            --authrpc.port=9551
+            --authrpc.vhosts="*"
+            --authrpc.jwtsecret="/root/jwt.hex"
+            --rollup.sequencerhttp="https://sequencer.base.org"
+            --chain=base
+            --nodiscover
+        depends_on:
+            - erigon
+    op-node:
+        image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node
+        restart: unless-stopped
+        volumes:
+            - /internal/eth:/root
+        ports:
+            - "7000:7000" # rpc
+            - "9003:9003"
+        command: >
+            op-node
+              --l1=ws://erigon:8546
+              --l1.trustrpc
+              --l2=ws://op-erigon:9551
+              --l2.jwt-secret=/root/jwt/jwt.hex
+              --rollup.config=/root/rollup/rollup.json
+              --rpc.addr=0.0.0.0
+              --rpc.port=7000
+              --network=base-mainnet
+        depends_on:
+            - erigon
+            - op-erigon
